@@ -20,10 +20,10 @@ import android.view.Menu
 import android.view.MenuItem
 
 class MainActivity : AppCompatActivity() {
-    private val weather_api = "Sr-c5V7NWuYCNInth"
     private val datePage1: DatePage1 = DatePage1()
     private val datePage2: DatePage2 = DatePage2()
     private val datePage3: DatePage3 = DatePage3()
+    private lateinit var weatherNetwork: WeatherNetwork
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -62,6 +62,8 @@ class MainActivity : AppCompatActivity() {
         searchButton.setOnClickListener {
             selectWeather()
         }
+
+        weatherNetwork = WeatherNetwork(this)
     }
 
     private fun calDate(year: Int, month: Int, day: Int, sum: Int): String {
@@ -113,57 +115,28 @@ class MainActivity : AppCompatActivity() {
         runOnUiThread {
             Log.d("aaa", "cityName: " + cityName)
         }
-        val client = OkHttpClient()
-        val url = "https://api.seniverse.com/v3/weather/daily.json?key=$weather_api&location=$cityName&language=zh-Hans&unit=c&start=0&days=15"
-        val request = Request.Builder().url(url).build()
-
-        client.newCall(request).enqueue(object : okhttp3.Callback {
-            override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
+        weatherNetwork.getDaily(cityName, object: WeatherNetwork.weatherCallback {
+            override fun onWeatherSuccess(weatherInfo: WeatherResponse) {
                 runOnUiThread {
-                    Toast.makeText(this@MainActivity, "请求失败", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "请求成功", Toast.LENGTH_SHORT).show()
+                    for (i in 0 until weatherInfo.results[0].daily.size) {
+                        if (i == 0) {
+                            datePage1.setPage(weatherInfo, i)
+                            loadView(datePage1)
+                        } else if (i == 1) {
+                            datePage2.setPage(weatherInfo, i)
+                            loadView(datePage2)
+                        } else {
+                            datePage3.setPage(weatherInfo, i)
+                            loadView(datePage3)
+                        }
+                    }
                 }
             }
 
-            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
-                if (response.isSuccessful) {
-                    val data = response.body?.string()
-                    if (data == null) {
-                        return
-                    }
-                    runOnUiThread {
-                        Log.d("aaa", "data:" + data)
-                    }
-                    val gson = Gson()
-                    val weatherInfo = gson.fromJson(data, WeatherResponse::class.java)
-//                    Log.d("aaa", weatherInfo.infoCode.toString())
-                    if (weatherInfo.results.isNotEmpty()) {
-                        runOnUiThread {
-                            Toast.makeText(this@MainActivity, "请求成功", Toast.LENGTH_SHORT).show()
-                            for (i in 0 until weatherInfo.results[0].daily.size) {
-                                if (i == 0) {
-                                    datePage1.setPage(weatherInfo, i)
-                                    loadView(datePage1)
-                                } else if (i == 1) {
-                                    datePage2.setPage(weatherInfo, i)
-                                } else {
-                                    datePage3.setPage(weatherInfo, i)
-                                }
-                            }
-                        }
-//                        val showText: TextView = findViewById(R.id.showText)
-//                        showText.setText("城市：${result.location.name}\n\n天气：${result.daily[0].text_day}\n\n温度：${result.last_update}\n")
-////                        val searchText: EditText = findViewById(R.id.searchText)
-//                        searchText.setText("")
-                    } else {
-                        runOnUiThread {
-                            Log.d("aaa", "infoCode:" + weatherInfo.toString())
-                            Toast.makeText(this@MainActivity, "获取天气信息失败", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                } else {
-                    runOnUiThread {
-                        Toast.makeText(this@MainActivity, "请求失败", Toast.LENGTH_SHORT).show()
-                    }
+            override fun onWeatherFailure(info: String) {
+                runOnUiThread {
+                    Toast.makeText(this@MainActivity, info, Toast.LENGTH_SHORT).show()
                 }
             }
         })

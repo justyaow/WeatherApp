@@ -4,6 +4,16 @@ data class WeatherResponse(
     val results: List<Result>
 )
 
+data class WeatherTimeResponse(
+    val results: List<TimeResult>
+)
+
+data class TimeResult(
+    val location: Information,
+    val now: Now,
+    val last_update: String
+)
+
 data class Result(
     val location: Information,
     val daily: List<Daily>,
@@ -34,6 +44,22 @@ data class Daily(
     val wind_scale: String,
     val rainfall: String,
     val humidity: String
+)
+
+data class Now(
+    val text: String,
+    val code: String,
+    val temperature: String,
+    val feels_like: String,
+    val pressure: String,
+    val humidity: String,
+    val visibility: String,
+    val wind_direction: String,
+    val wind_direction_degree: String,
+    val wind_speed: String,
+    val wind_scale: String,
+    val clouds: String,
+    val dew_point: String
 )
 
 //{
