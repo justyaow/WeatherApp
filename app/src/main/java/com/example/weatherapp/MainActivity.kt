@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         val exitButton: Button = findViewById(R.id.exit)
         val cityName: String? = intent.getStringExtra("cityName")
         if (cityName != null) {
-            Log.d("aaa", "intent city")
+            Log.d("aaa", "intent city $cityName")
             requestWeather(cityName)
             cityButton.setText("添加城市")
             exitButton.setText("取消")

@@ -63,7 +63,14 @@ class ListActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             data?.getStringExtra(EXTRA_CITY_ADDED)?.let { city ->
-                idList.add(city)
+                var ans: String = ""
+                for (c in city) {
+                    if (c == ' ') {
+                        break
+                    }
+                    ans += c
+                }
+                idList.add(ans)
                 adapter.addItem(city)
             }
         }
