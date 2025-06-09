@@ -29,9 +29,9 @@ class WeatherNetwork(private val context: Context) {
                 if (response.isSuccessful) {
                     val data = response.body?.string()
                     if (data != null) {
-                        val weatherInfo = gson.fromJson(data, WeatherResponse::class.java)
+                        val weatherInfo = gson.fromJson(data, WeatherTimeResponse::class.java)
                         if (weatherInfo.results.isNotEmpty()) {
-                            callback.onWeatherSuccess(weatherInfo)
+                            callback.onWeatherTimeSuccess(weatherInfo)
                         } else {
                             callback.onWeatherFailure("获取天气信息失败")
                         }
@@ -52,12 +52,16 @@ class WeatherNetwork(private val context: Context) {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                callback.onWeatherFailure("请求失败")
+                callback.onWeatherFailure("请求失败1")
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
                     val data = response.body?.string()
+//                    runOnUiThread {
+//                        Log.d("aaa", "data: $data")
+//                    }
+                    callback.onWeatherFailure("data:$data.toString()")
                     if (data != null) {
                         val weatherInfo = gson.fromJson(data, WeatherResponse::class.java)
                         if (weatherInfo.results.isNotEmpty()) {
@@ -69,7 +73,7 @@ class WeatherNetwork(private val context: Context) {
                         callback.onWeatherFailure("获取数据失败")
                     }
                 } else {
-                    callback.onWeatherFailure("请求失败")
+                    callback.onWeatherFailure("${response.code}")
                 }
             }
         })
@@ -78,5 +82,6 @@ class WeatherNetwork(private val context: Context) {
     interface weatherCallback {
         fun onWeatherSuccess(weatherInfo: WeatherResponse)
         fun onWeatherFailure(info: String)
+        fun onWeatherTimeSuccess(weatherInfo: WeatherTimeResponse)
     }
 }

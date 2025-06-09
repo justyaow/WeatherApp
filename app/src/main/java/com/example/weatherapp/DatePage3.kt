@@ -27,7 +27,7 @@ class DatePage3 : Fragment() {
     fun setPage(weatherInfo: WeatherResponse, pos: Int) {
         val result = weatherInfo.results[0]
         val date = result.daily[pos]
-        info = "城市：${result.location.name}\n\n白天天气：${date.text_day}\n\n夜间天气：${date.text_night}\n\n最高温度：${date.high} 最低温度：${date.low}\n\n降水概率：${date.precip}\n\n降水量：${date.rainfall}\n\n风向：${date.wind_direction} 风力等级：${date.wind_scale}\n\n相对湿度：${date.humidity}"
+        info = "城市：${result.location.name}\n\n白天天气：${date.text_day}\n\n夜间天气：${date.text_night}\n\n最高温度：${date.high}℃ 最低温度：${date.low}℃\n\n降水概率：${date.precip}%\n\n降水量：${date.rainfall}\n\n风向：${date.wind_direction}风 风力等级：${date.wind_scale}级\n\n相对湿度：${date.humidity}"
         if (ok) {
             Log.d("aaa", "datePage3 ok")
             dateView?.setText(info)

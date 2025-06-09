@@ -1,23 +1,22 @@
 package com.example.weatherapp
 
+import android.app.Activity
 import android.os.Bundle
+import android.util.Log
+import android.view.MenuItem
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import android.widget.Toast
-import com.google.gson.Gson
-import android.widget.Button
-import android.widget.EditText
-import android.util.Log
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.util.*
-import android.view.Menu
-import android.view.MenuItem
+import java.util.Calendar
+import android.content.Intent
+
 
 class MainActivity : AppCompatActivity() {
     private val datePage1: DatePage1 = DatePage1()
@@ -58,12 +57,60 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val searchButton: Button = findViewById(R.id.searchButton)
-        searchButton.setOnClickListener {
-            selectWeather()
-        }
-
         weatherNetwork = WeatherNetwork(this)
+
+        val cityButton: Button = findViewById(R.id.cityButton)
+        val exitButton: Button = findViewById(R.id.exit)
+        val cityName: String? = intent.getStringExtra("cityName")
+        if (cityName != null) {
+            Log.d("aaa", "intent city")
+            requestWeather(cityName)
+            cityButton.setText("添加城市")
+            exitButton.setText("取消")
+            exitButton.setOnClickListener {
+                cancel()
+            }
+            cityButton.setOnClickListener {
+                addCity()
+            }
+        } else {
+            cityButton.setText("城市管理")
+            exitButton.setText("退出")
+            exitButton.setOnClickListener {
+                exitApp()
+            }
+            cityButton.setOnClickListener {
+                showList()
+            }
+        }
+    }
+
+    private fun cancel() {
+        finish()
+    }
+
+    private fun exitApp() {
+        finish()
+    }
+
+    private fun addCity() {
+        val ok = intent.getStringExtra("ok")
+        if (ok == "n") {
+            finish()
+            return
+        }
+        val titleText: TextView = findViewById(R.id.title)
+        val ans: String = titleText.text.toString()
+        val intent = Intent().apply {
+            putExtra(ListActivity.EXTRA_CITY_ADDED, ans)
+        }
+        setResult(Activity.RESULT_OK, intent)
+        finish()
+    }
+
+    private fun showList() {
+        val intent = Intent(this, ListActivity::class.java)
+        startActivity(intent)
     }
 
     private fun calDate(year: Int, month: Int, day: Int, sum: Int): String {
@@ -101,24 +148,17 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    fun selectWeather() {
-        val searchText: EditText = findViewById(R.id.searchText)
-        val cityName: String = searchText.text.toString()
-        if (cityName == "") {
-            Toast.makeText(this, "请输入城市名称", Toast.LENGTH_SHORT).show()
-        } else {
-            requestWeather(cityName)
-        }
-    }
-
-    fun requestWeather(cityName: String) {
+    private fun requestWeather(cityName: String) {
         runOnUiThread {
             Log.d("aaa", "cityName: " + cityName)
+        }
+        if (cityName == "") {
+            return
         }
         weatherNetwork.getDaily(cityName, object: WeatherNetwork.weatherCallback {
             override fun onWeatherSuccess(weatherInfo: WeatherResponse) {
                 runOnUiThread {
-                    Toast.makeText(this@MainActivity, "请求成功", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this@MainActivity, "请求成功", Toast.LENGTH_SHORT).show()
                     for (i in 0 until weatherInfo.results[0].daily.size) {
                         if (i == 0) {
                             datePage1.setPage(weatherInfo, i)
@@ -136,9 +176,38 @@ class MainActivity : AppCompatActivity() {
 
             override fun onWeatherFailure(info: String) {
                 runOnUiThread {
+                    Log.d("aaa", info)
+                    Toast.makeText(this@MainActivity, info, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onWeatherTimeSuccess(whatherInfo: WeatherTimeResponse) {}
+        })
+
+        weatherNetwork.getNow(cityName, object: WeatherNetwork.weatherCallback {
+            override fun onWeatherTimeSuccess(weatherInfo: WeatherTimeResponse) {
+                runOnUiThread {
+                    val title: TextView = findViewById(R.id.title)
+                    val result = weatherInfo.results[0]
+                    title.setText("${result.location.name}     ${result.now.text}  ${result.now.temperature}℃\n更新时间：${result.last_update}")
+                }
+            }
+
+            override fun onWeatherSuccess(weatherInfo: WeatherResponse) {}
+
+            override fun onWeatherFailure(info: String) {
+                runOnUiThread {
+                    Log.d("aaa", info)
                     Toast.makeText(this@MainActivity, info, Toast.LENGTH_SHORT).show()
                 }
             }
         })
+
+//        val client = OkHttpClient()Add commentMore actions
+//        val url = "https://restapi.amap.com/v3/weather/weatherInfo?key=$weather_api&city=$cityName"
+//        val url = "https://api.seniverse.com/v3/weather/daily.json?key=$weather_api&location=$cityName&language=zh-Hans&unit=c&start=0&days=15"
+//        val request = Request.Builder().url(url).build()
+//
+//        client.newCall(request).enqueue(object : okhttp3.Callback {
     }
 }

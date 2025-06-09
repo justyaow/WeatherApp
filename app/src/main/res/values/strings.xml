@@ -2,4 +2,6 @@
     <string name="app_name">天气</string>
     <string name="hint">请输入需要查询的城市名称</string>
     <string name="search">查询</string>
+    <string name="cityManager">城市管理</string>
+    <string name="exit">退出</string>
 </resources>
