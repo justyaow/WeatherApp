@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -16,13 +14,18 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.Calendar
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
+import com.example.weatherapp.Data.WeatherResponse
+import com.example.weatherapp.Data.WeatherTimeResponse
+import com.example.weatherapp.View.ListActivity
 
 
 class MainActivity : AppCompatActivity() {
-    private val datePage1: DatePage1 = DatePage1()
-    private val datePage2: DatePage2 = DatePage2()
-    private val datePage3: DatePage3 = DatePage3()
+    private val todayPage: TodayPage = TodayPage()
+    private val tomorrowPage: TomorrowPage = TomorrowPage()
+    private val afterTomorrowPage: AfterTomorrowPage = AfterTomorrowPage()
     private lateinit var weatherNetwork: WeatherNetwork
+    private var flag = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -35,9 +38,9 @@ class MainActivity : AppCompatActivity() {
 
         val bottomTab: BottomNavigationView = findViewById(R.id.bottomTab)
         val menu = bottomTab.menu
-        val item1: MenuItem = menu.findItem(R.id.page_date1)
-        val item2: MenuItem = menu.findItem(R.id.page_date2)
-        val item3: MenuItem = menu.findItem(R.id.page_date3)
+        val item1: MenuItem = menu.findItem(R.id.page_today)
+        val item2: MenuItem = menu.findItem(R.id.page_tomorrow)
+        val item3: MenuItem = menu.findItem(R.id.page_after_tomorrow)
         val calendar = Calendar.getInstance()
         val year: Int = calendar.get(Calendar.YEAR)
         val month: Int = calendar.get(Calendar.MONTH)
@@ -47,12 +50,12 @@ class MainActivity : AppCompatActivity() {
         item2.setTitle(calDate(year, month, day, 1))
         item3.setTitle(calDate(year, month, day, 2))
 
-        loadView(DatePage1())
+        loadView(todayPage)
         bottomTab.setOnItemSelectedListener { item ->
             when(item.itemId) {
-                R.id.page_date1 -> loadView(datePage1)
-                R.id.page_date2 -> loadView(datePage2)
-                R.id.page_date3 -> loadView(datePage3)
+                R.id.page_today -> loadView(todayPage)
+                R.id.page_tomorrow -> loadView(tomorrowPage)
+                R.id.page_after_tomorrow -> loadView(afterTomorrowPage)
                 else -> false
             }
         }
@@ -175,14 +178,14 @@ class MainActivity : AppCompatActivity() {
 //                    Toast.makeText(this@MainActivity, "请求成功", Toast.LENGTH_SHORT).show()
                     for (i in 0 until weatherInfo.results[0].daily.size) {
                         if (i == 0) {
-                            datePage1.setPage(weatherInfo, i)
-                            loadView(datePage1)
+                            todayPage.setPage(weatherInfo, i)
+                            loadView(todayPage)
                         } else if (i == 1) {
-                            datePage2.setPage(weatherInfo, i)
-                            loadView(datePage2)
+                            tomorrowPage.setPage(weatherInfo, i)
+                            loadView(tomorrowPage)
                         } else {
-                            datePage3.setPage(weatherInfo, i)
-                            loadView(datePage3)
+                            afterTomorrowPage.setPage(weatherInfo, i)
+                            loadView(afterTomorrowPage)
                         }
                     }
                 }

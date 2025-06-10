@@ -4,10 +4,10 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/dateView3"
+        android:id="@+id/dateView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="date3"
+        android:text="date"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold" />

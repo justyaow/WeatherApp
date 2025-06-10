@@ -7,8 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.util.Log
+import com.example.weatherapp.Data.WeatherResponse
 
-class DatePage2 : Fragment() {
+class TomorrowPage : Fragment() {
     private var dateView: TextView? = null
     private var info: String = ""
     private var ok: Boolean = false
@@ -17,8 +18,8 @@ class DatePage2 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Log.d("aaa", "datePage2")
-        val view = inflater.inflate(R.layout.page_date2, container, false)
-        dateView = view.findViewById(R.id.dateView2)
+        val view = inflater.inflate(R.layout.page_tomorrow, container, false)
+        dateView = view.findViewById(R.id.dateView)
         ok = true
         dateView?.setText(info)
         return view

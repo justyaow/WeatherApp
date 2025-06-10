@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/page_date1"
-        android:title="datePage1" />
+        android:id="@+id/page_today"
+        android:title="datePage" />
     <item
-        android:id="@+id/page_date2"
-        android:title="datePage2" />
+        android:id="@+id/page_tomorrow"
+        android:title="datePage" />
     <item
-        android:id="@+id/page_date3"
-        android:title="datePage3" />
+        android:id="@+id/page_after_tomorrow"
+        android:title="datePage" />
 </menu>
