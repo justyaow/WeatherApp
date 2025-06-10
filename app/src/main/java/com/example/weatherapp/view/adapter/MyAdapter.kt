@@ -1,4 +1,4 @@
-package com.example.weatherapp
+package com.example.weatherapp.view.adapter
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.weatherapp.utils.MyDatabase
+import com.example.weatherapp.R
 
 class MyAdapter(private val context: Context, private val itemList: MutableList<String>, private val onItemClick: (Int) -> Unit, private val onItemLongClick: (Int) -> Unit) :
     RecyclerView.Adapter<MyAdapter.ViewHolder>() {

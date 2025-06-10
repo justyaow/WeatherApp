@@ -1,4 +1,4 @@
-package com.example.weatherapp
+package com.example.weatherapp.utils
 
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -8,8 +8,8 @@ import java.io.IOException
 import com.google.gson.Gson
 import okhttp3.Call
 import android.content.Context
-import com.example.weatherapp.Data.WeatherResponse
-import com.example.weatherapp.Data.WeatherTimeResponse
+import com.example.weatherapp.data.WeatherResponse
+import com.example.weatherapp.data.WeatherTimeResponse
 
 class WeatherNetwork(private val context: Context) {
     private val client = OkHttpClient()

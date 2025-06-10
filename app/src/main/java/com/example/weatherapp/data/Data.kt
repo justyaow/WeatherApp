@@ -1,4 +1,4 @@
-package com.example.weatherapp.Data
+package com.example.weatherapp.data
 
 data class WeatherResponse(
     val results: List<Result>

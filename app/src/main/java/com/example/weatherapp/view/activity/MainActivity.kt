@@ -1,4 +1,6 @@
-package com.example.weatherapp
+package com.example.weatherapp.view.activity
+
+import com.example.weatherapp.view.fragment.BasePage
 
 import android.app.Activity
 import android.os.Bundle
@@ -15,15 +17,17 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.Calendar
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
-import com.example.weatherapp.Data.WeatherResponse
-import com.example.weatherapp.Data.WeatherTimeResponse
-import com.example.weatherapp.View.ListActivity
+import com.example.weatherapp.data.WeatherResponse
+import com.example.weatherapp.data.WeatherTimeResponse
+import com.example.weatherapp.utils.MyDatabase
+import com.example.weatherapp.R
+import com.example.weatherapp.utils.WeatherNetwork
 
 
 class MainActivity : AppCompatActivity() {
-    private val todayPage: TodayPage = TodayPage()
-    private val tomorrowPage: TomorrowPage = TomorrowPage()
-    private val afterTomorrowPage: AfterTomorrowPage = AfterTomorrowPage()
+    private val todayPage: BasePage = BasePage(1)
+    private val tomorrowPage: BasePage = BasePage(2)
+    private val afterTomorrowPage: BasePage = BasePage(3)
     private lateinit var weatherNetwork: WeatherNetwork
     private var flag = 1
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package com.example.weatherapp.View
+package com.example.weatherapp.view.activity
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -15,9 +15,8 @@ import android.widget.EditText
 import android.widget.Toast
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import com.example.weatherapp.MainActivity
-import com.example.weatherapp.MyAdapter
-import com.example.weatherapp.MyDatabase
+import com.example.weatherapp.view.adapter.MyAdapter
+import com.example.weatherapp.utils.MyDatabase
 import com.example.weatherapp.R
 
 class ListActivity : AppCompatActivity() {

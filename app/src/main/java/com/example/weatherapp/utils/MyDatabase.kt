@@ -1,9 +1,8 @@
-package com.example.weatherapp
+package com.example.weatherapp.utils
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 
 class MyDatabase (
     context: Context,
