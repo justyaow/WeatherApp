@@ -112,10 +112,10 @@ class ListActivity : AppCompatActivity() {
                 Log.d("aaa", "pos: $pos")
                 Log.d("aaa", "listid ${idList.size}")
                 adapter.removeItem(pos)
-                idList.removeAt(pos)
                 val dbInfo = MyDatabase(this, "weather", null, 1)
                 val infoW: SQLiteDatabase = dbInfo.writableDatabase
                 infoW.execSQL("delete from cityData where cityName = ?", arrayOf(idList[pos]))
+                idList.removeAt(pos)
                 dbInfo.close()
             }
             .setNegativeButton("取消", null)
