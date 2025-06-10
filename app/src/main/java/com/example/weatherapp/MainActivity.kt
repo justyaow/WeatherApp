@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.Calendar
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 
 
 class MainActivity : AppCompatActivity() {
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private val datePage2: DatePage2 = DatePage2()
     private val datePage3: DatePage3 = DatePage3()
     private lateinit var weatherNetwork: WeatherNetwork
+    private var flag = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -82,6 +84,19 @@ class MainActivity : AppCompatActivity() {
             cityButton.setOnClickListener {
                 showList()
             }
+        }
+
+        if (flag == 1) {
+            val dbInfo = MyDatabase(this, "weather",null, 1)
+            val infoR: SQLiteDatabase = dbInfo.readableDatabase
+            val cursor = infoR.rawQuery("select * from cityData", null)
+            if (cursor.moveToFirst()) {
+                val name: String = cursor.getString(cursor.getColumnIndexOrThrow("cityName"))
+                requestWeather(name)
+            } else {
+                requestWeather("北京")
+            }
+            flag = 0
         }
     }
 
