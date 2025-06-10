@@ -74,6 +74,20 @@ class MainActivity : AppCompatActivity() {
                 addCity()
             }
         } else {
+            if (flag == 1) {
+                val dbInfo = MyDatabase(this, "weather",null, 1)
+                val infoR: SQLiteDatabase = dbInfo.readableDatabase
+                val cursor = infoR.rawQuery("select * from cityData", null)
+                if (cursor.moveToFirst()) {
+                    val name: String = cursor.getString(cursor.getColumnIndexOrThrow("cityName"))
+                    requestWeather(name)
+                } else {
+                    requestWeather("北京")
+                }
+                cursor.close()
+                dbInfo.close()
+                flag = 0
+            }
             cityButton.setText("城市管理")
             exitButton.setText("退出")
             exitButton.setOnClickListener {
@@ -177,11 +191,11 @@ class MainActivity : AppCompatActivity() {
             override fun onWeatherFailure(info: String) {
                 runOnUiThread {
                     Log.d("aaa", info)
-                    Toast.makeText(this@MainActivity, info, Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this@MainActivity, info, Toast.LENGTH_SHORT).show()
                 }
             }
 
-            override fun onWeatherTimeSuccess(whatherInfo: WeatherTimeResponse) {}
+            override fun onWeatherTimeSuccess(weatherInfo: WeatherTimeResponse) {}
         })
 
         weatherNetwork.getNow(cityName, object: WeatherNetwork.weatherCallback {
@@ -198,7 +212,7 @@ class MainActivity : AppCompatActivity() {
             override fun onWeatherFailure(info: String) {
                 runOnUiThread {
                     Log.d("aaa", info)
-                    Toast.makeText(this@MainActivity, info, Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this@MainActivity, info, Toast.LENGTH_SHORT).show()
                 }
             }
         })

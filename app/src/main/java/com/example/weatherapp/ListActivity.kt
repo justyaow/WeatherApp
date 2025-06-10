@@ -14,6 +14,7 @@ import android.content.Intent
 import android.widget.EditText
 import android.widget.Toast
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 
 class ListActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -29,6 +30,17 @@ class ListActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        val dbInfo = MyDatabase(this, "weather", null, 1)
+        val infoR: SQLiteDatabase = dbInfo.readableDatabase
+        val cursor = infoR.rawQuery("select * from cityData", null)
+        if (cursor.moveToFirst()) {
+            do {
+                val name: String = cursor.getString(cursor.getColumnIndexOrThrow("cityName"))
+                idList.add(name)
+            } while(cursor.moveToNext())
+        }
+        dbInfo.close()
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -97,7 +109,14 @@ class ListActivity : AppCompatActivity() {
             .setTitle("删除")
             .setMessage("确定要删除这项城市吗？")
             .setPositiveButton("删除") { _, _ ->
+                Log.d("aaa", "pos: $pos")
+                Log.d("aaa", "listid ${idList.size}")
                 adapter.removeItem(pos)
+                val dbInfo = MyDatabase(this, "weather", null, 1)
+                val infoW: SQLiteDatabase = dbInfo.writableDatabase
+                infoW.execSQL("delete from cityData where cityName = ?", arrayOf(idList[pos]))
+                idList.removeAt(pos)
+                dbInfo.close()
             }
             .setNegativeButton("取消", null)
             .show()
