@@ -1,4 +1,4 @@
-package com.example.weatherapp
+package com.example.weatherapp.View
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -15,6 +15,10 @@ import android.widget.EditText
 import android.widget.Toast
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import com.example.weatherapp.MainActivity
+import com.example.weatherapp.MyAdapter
+import com.example.weatherapp.MyDatabase
+import com.example.weatherapp.R
 
 class ListActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
