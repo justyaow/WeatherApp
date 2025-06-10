@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import android.content.Intent
 import android.widget.EditText
 import android.widget.Toast
+import android.database.sqlite.SQLiteDatabase
 
 class ListActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -62,6 +63,8 @@ class ListActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            var cityName: String = ""
+            var cityInfo: String = ""
             data?.getStringExtra(EXTRA_CITY_ADDED)?.let { city ->
                 var ans: String = ""
                 for (c in city) {
@@ -70,9 +73,15 @@ class ListActivity : AppCompatActivity() {
                     }
                     ans += c
                 }
+                cityName = ans
+                cityInfo = city
                 idList.add(ans)
                 adapter.addItem(city)
             }
+            val dbInfo = MyDatabase(this, "weather", null, 1)
+            val infoW: SQLiteDatabase = dbInfo.writableDatabase
+            infoW.execSQL("insert or replace into cityData(cityName, cityInfo) values(?, ?)", arrayOf(cityName, cityInfo))
+            dbInfo.close()
         }
     }
 

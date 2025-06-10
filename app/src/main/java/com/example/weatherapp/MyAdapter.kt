@@ -12,6 +12,19 @@ import androidx.recyclerview.widget.RecyclerView
 class MyAdapter(private val context: Context, private val itemList: MutableList<String>, private val onItemClick: (Int) -> Unit, private val onItemLongClick: (Int) -> Unit) :
     RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
+    init {
+        val dbInfo = MyDatabase(context, "weather", null, 1)
+        val infoR: SQLiteDatabase = dbInfo.readableDatabase
+        val cursor = infoR.rawQuery("select * from cityData", null)
+        if (cursor.moveToFirst()) {
+            do {
+                val content: String = cursor.getString(cursor.getColumnIndexOrThrow("cityInfo"))
+                addItem(content)
+            } while(cursor.moveToNext())
+        }
+        dbInfo.close()
+    }
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.itemTextView)
     }
